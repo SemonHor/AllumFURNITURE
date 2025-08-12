@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
 
-BASE_ROUTE_PATH = "/api/api"
+BASE_ROUTE_PATH = "/api"
 
 app = FastAPI(
     openapi_url=f"{BASE_ROUTE_PATH}/openapi.json",
