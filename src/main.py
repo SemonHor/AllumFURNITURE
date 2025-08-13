@@ -69,7 +69,7 @@ app = FastAPI(
 
 router = APIRouter(prefix=BASE_ROUTE_PATH)
 
-#@router.get("/furniture_calc/{Name_Type}?*{List_Of_Parts}*")
+#@router.get("/furniture_calc/{Name_Type}/{List_Of_Parts}")
 def give_furniture_cost(Name_Type,List_Of_Parts,_Production_Cost=1.13):
     cost = 0
     if List_Of_Parts == []:
