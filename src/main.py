@@ -6,6 +6,7 @@ BASE_ROUTE_PATH = "/api/V1"
 
 #Наценка.
 EXTRA_CHARGE = {
+    'standart':1,
     'dresser':2,
     'bedside':1.5,
     'сhair':3
@@ -33,8 +34,8 @@ ALL_FURNITURE = [
         '_Name_Type':'dresser',
         '_production_cost':'1.5',
         '_Parts':[
-            '2:id=1:M=1:[H:W]=[220:50]',
-            '4:id=2:M=1:[H:W]=[50:50]'
+            '2id1M1H220W50',
+            '4id2M1H50W50'
         ]
     },
     {
@@ -44,9 +45,9 @@ ALL_FURNITURE = [
         '_Name_Type': 'bedside',
         '_production_cost':'1.3',
         '_Parts':[
-            '2:id=1:M=1:[H:W]=[100:40]',
-            '2:id=2:M=1:[H:W]=[50:30]',
-            '1:id=3:M=2:[H:W]=[70:35]'
+            '2id1M1H100W40',
+            '2id2M1H50W30',
+            '1id3M2H70W35'
         ]
     },
     {
@@ -56,8 +57,8 @@ ALL_FURNITURE = [
         '_Name_Type': 'сhair',
         '_production_cost':'2',
         '_Parts':[
-            '1:id=4:M=3:[H:W]=[100:40]',
-            '1:id=5:M=4:[H:W]=[50:50]',
+            '1id4M3H100W40',
+            '1id5M4H50W50'
         ]
     }
 ]
@@ -68,21 +69,23 @@ app = FastAPI(
 )
 
 router = APIRouter(prefix=BASE_ROUTE_PATH)
+
 @router.get("/furniture_calc/{Name_Type}/{List_Of_Parts}")
-def give_furniture_cost(Name_Type,List_Of_Parts,_Production_Cost=1.13):
+def give_furniture_cost(Name_Type: str,List_Of_Parts: str,_Production_Cost=1.13):
     cost = 0
+    List_Of_Parts = List_Of_Parts.split('_')
     if List_Of_Parts == []:
         return 'Error404'
-    for part in List_Of_Parts:
-            pos=part[part.rfind('[')+1:-1]
-            cost+= float(int(part[:part.find(':')])\
-                *_PARTS_ID_COST[part[part.find('=')+1]]\
-                *int(pos[:pos.find(':')])*int(pos[pos.find(':')+1:])\
-                *_MATHERIAL_EXTRA_CHARGE[part[part.find('M=')+2:part.find(':[')]])
+    for pr in List_Of_Parts:
+        Count = pr[:pr.find('i')]
+        Id=_PARTS_ID_COST[pr[pr.find('d')+1:pr.find('M')]]
+        MEC=_MATHERIAL_EXTRA_CHARGE[pr[pr.find('M')+1:pr.find('H')]]
+        H=pr[pr.find('H')+1:pr.find('W')]
+        W=pr[pr.find('W')+1:]
+        cost+=float(Count)*float(H)*float(W)*float(MEC)*float(Id)
     cost*=float(_Production_Cost)*float(EXTRA_CHARGE[Name_Type])
     return f"Итоговая стоимость: {int(cost)} у.е."
 
-# 1:id-3:M-2:[H:W]-[70:35]
 @router.get("/standart_furniture/{ID}")
 async def Find_id_furniture_cost(ID):
     for Last_id in ALL_FURNITURE:
