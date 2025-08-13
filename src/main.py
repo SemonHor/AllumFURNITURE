@@ -13,7 +13,7 @@ router = APIRouter(prefix=BASE_ROUTE_PATH)
 
 @router.get("/hi")
 async def get_hi():
-    return "hi"
+    return "hello world"
 
 app.include_router(router)
 
