@@ -41,7 +41,7 @@ ALL_FURNITURE = [
     {
         'id':'1',
         'Name':'Прикроватная тумба <<Айда-баран>>',
-        'Description':'Обычная тумбочка с ',
+        'Description':'Обычная тумбочка с чем-то',
         '_Name_Type': 'bedside',
         '_production_cost':'1.3',
         '_Parts':[
@@ -53,7 +53,7 @@ ALL_FURNITURE = [
     {
         'id':'2',
         'Name':'Стул <<Вай>>',
-        'Description':'',
+        'Description':'Ну стул и стул',
         '_Name_Type': 'сhair',
         '_production_cost':'2',
         '_Parts':[
@@ -71,9 +71,10 @@ app = FastAPI(
 router = APIRouter(prefix=BASE_ROUTE_PATH)
 
 @router.get("/furniture_calc/{Name_Type}/{List_Of_Parts}")
-def give_furniture_cost(Name_Type: str,List_Of_Parts: str,_Production_Cost=1.13):
+async def give_furniture_cost(Name_Type: str,List_Of_Parts,_Production_Cost=1.13):
     cost = 0
-    List_Of_Parts = List_Of_Parts.split('_')
+    if type(List_Of_Parts) is str:
+        List_Of_Parts = List_Of_Parts.split('_')
     if List_Of_Parts == []:
         return 'Error404'
     for pr in List_Of_Parts:
@@ -84,14 +85,22 @@ def give_furniture_cost(Name_Type: str,List_Of_Parts: str,_Production_Cost=1.13)
         W=pr[pr.find('W')+1:]
         cost+=float(Count)*float(H)*float(W)*float(MEC)*float(Id)
     cost*=float(_Production_Cost)*float(EXTRA_CHARGE[Name_Type])
-    return f"Итоговая стоимость: {int(cost)} у.е."
+    return str(int(cost))
 
 @router.get("/standart_furniture/{ID}")
-async def Find_id_furniture_cost(ID):
+async def Find_id_furniture_cost_and_(ID):
+    Md = {
+        'Name':'Err404',
+        'Description':'',
+        'Cost':''
+    }
     for Last_id in ALL_FURNITURE:
         if Last_id['id'] == ID:
-            return give_furniture_cost(Last_id['_Name_Type'],Last_id['_Parts'],Last_id['_production_cost'])
-    return 'Error404'
+            Md['Name'] = Last_id['Name']
+            Md['Description'] = Last_id['Description']
+            Md['Cost'] = give_furniture_cost(Last_id['_Name_Type'],Last_id['_Parts'],Last_id['_production_cost'])
+    return Md
+
 app.include_router(router)
 
 if __name__ == '__main__':
