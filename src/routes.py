@@ -1,6 +1,6 @@
 from fastapi.routing import APIRouter
-from config import settings
-from modules import ORDER
+from src.config import settings
+from src.modules import ORDER
 
 router = APIRouter(prefix=settings.BASE_ROUTE_PATH)
 
