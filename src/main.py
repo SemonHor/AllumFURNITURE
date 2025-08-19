@@ -1,16 +1,16 @@
 import uvicorn
 from fastapi import FastAPI
 from routes import router as rout
-from config import BASE_ROUTE_PATH
+from config import settings
 from fastapi.routing import APIRouter
 
 
 app = FastAPI(
-    openapi_url=f"{BASE_ROUTE_PATH}/openapi.json",
-    docs_url=f"{BASE_ROUTE_PATH}/docs",
+    openapi_url=f"{settings.BASE_ROUTE_PATH}/openapi.json",
+    docs_url=f"{settings.BASE_ROUTE_PATH}/docs",
 )
 
-router = APIRouter(prefix=BASE_ROUTE_PATH)
+router = APIRouter(prefix=settings.BASE_ROUTE_PATH)
 
 router.include_router(rout, prefix='/Furniture', tags=['Furniture'])
 
