@@ -2,7 +2,7 @@
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from src.models.part import Part,Metarial,PartPreform
+from src.models.part import Part, Metarial, PartPreform
 from src.models.furniture import Furniture
 # from src.models.client import Client
 from src.models.order import Bundle
