@@ -2,10 +2,11 @@
 # from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-# from src.schemes.order import FurnitureInputScheme, PartScheme
-from src.models import Part, Furniture, Metarial, PartPreform, Bundle
-from src.schemes.bundle import BundleCreate, BundleFromDB
-# from src.db import get_session
+from src.models.part import Part,Metarial,Modificator,PartPreform
+from src.models.furniture import Furniture
+from src.models.client import Client
+from src.models.order import Order, Bundle
+from src.schemes.bundle import BundleCreate
 
 
 async def name_in_parts(name: str, db_session):
@@ -14,8 +15,8 @@ async def name_in_parts(name: str, db_session):
     return query.scalars().first()
 
 
-async def find_standart_bundles(db_session):
-    query = await db_session.execute(select(Bundle).filter_by(is_standart=False))
+async def get_standart_bundles(db_session):
+    query = await db_session.execute(select(Bundle).filter_by(is_standart=True))
     print(query)
     return query.scalars().all()
 
@@ -27,11 +28,10 @@ async def create_furniture(name: str, db_session):
     return furniture
 
 
-async def create_bundle(body: BundleCreate, db_session) -> BundleFromDB:
+async def create_bundle(body: BundleCreate, db_session):
     bundle = Bundle(**body.model_dump(exclude_unset=True))
     db_session.add(bundle)
     await db_session.commit()
-    print(bundle.serialize())
     return bundle.serialize()
 
 

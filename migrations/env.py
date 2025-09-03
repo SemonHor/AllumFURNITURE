@@ -13,7 +13,10 @@ from src.config import settings
 from src.db import Base
 
 # should add all models here
-from src.models import Part
+from src.models.part import Part
+from src.models.furniture import Furniture
+from src.models.client import Client
+from src.models.order import Order
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
