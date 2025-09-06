@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, UUID4
+from typing import Optional
 
 
 class ModificatorCreate(BaseModel):
@@ -13,3 +14,9 @@ class ModificatorFromDB(BaseModel):
     description: str = Field(description="Modificator name", default=None)
     value: float = Field(description="Value", default=None)
     uid_part: UUID4 | None = Field(description="Included in...")
+
+
+class ModificatorFromFilter(BaseModel):
+    uid: Optional[UUID4]
+    name: Optional[str]
+    uid_part: Optional[UUID4]

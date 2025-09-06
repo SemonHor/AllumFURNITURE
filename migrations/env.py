@@ -17,6 +17,10 @@ from src.models.part import Part
 from src.models.furniture import Furniture
 from src.models.client import Client
 from src.models.order import Order
+from src.models.bundle import Bundle
+from src.models.material import Meterial
+from src.models.modificators import Modificator
+from src.models.partpreform import PartPreform
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 

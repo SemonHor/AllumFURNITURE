@@ -1,8 +1,8 @@
-# from fastapi import Depends
-# from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from src.models.part import Part, Metarial, PartPreform
+from src.models.part import Part
 from src.models.furniture import Furniture
 # from src.models.client import Client
 from src.models.order import Bundle
@@ -21,8 +21,8 @@ async def get_standart_bundles(db_session):
     return query.scalars().all()
 
 
-async def create_furniture(name: str, db_session):
-    furniture = Furniture(name=name)
+async def create_furniture(body: str, db_session):
+    furniture = Furniture(**body.model_dump(exclude_unset=True))
     db_session.add(furniture)
     await db_session.commit()
     return furniture
@@ -40,8 +40,6 @@ async def create_part(body: dict, db_session):
     db_session.add(part)
     await db_session.commit()
     return part
-
-
 async def create_material(body: dict, db_session):
     material = Metarial(name=body['name'], description=body['description'], uid_part=body['uid_part'])
     db_session.add(material)

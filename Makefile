@@ -1,6 +1,6 @@
 
 
-all: QA
+all: RunAPI
 
 .PHONY: req
 req:
@@ -12,3 +12,11 @@ flake8: req
 
 .PHONY: QA
 QA: flake8
+
+.PHONY: Docker_start
+Docker:
+	./start_postgres_docker.sh
+	poetry run alembic upgrade head
+
+RunAPI: flake8
+	poetry run uvicorn src.main:app
