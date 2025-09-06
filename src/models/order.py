@@ -11,7 +11,7 @@ class Order(Base):
     __tablename__ = 'order'
 
     uid: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
-    status: Mapped[str] = mapped_column(String, nullable=False)
+    status: Mapped[str] = mapped_column(String, nullable=True)
     client_uid: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('client.uid'), default=None)
 
     included = relationship("Client", backref="orders")

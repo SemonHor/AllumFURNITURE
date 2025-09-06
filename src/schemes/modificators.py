@@ -5,7 +5,7 @@ from typing import Optional
 class ModificatorCreate(BaseModel):
     name: str = Field(description="Status", default=None)
     value: float = Field(description="Value", default=None)
-    uid_part: UUID4 | None = Field(description="Included in...")
+    uid_part: UUID4 | None = Field(description="Included in...", default=None)
 
 
 class ModificatorFromDB(BaseModel):
@@ -13,7 +13,7 @@ class ModificatorFromDB(BaseModel):
     name: str = Field(description="Modificator name", default=None)
     description: str = Field(description="Modificator name", default=None)
     value: float = Field(description="Value", default=None)
-    uid_part: UUID4 | None = Field(description="Included in...")
+    uid_part: UUID4 | None = Field(description="Included in...", default=None)
 
 
 class ModificatorFromFilter(BaseModel):

@@ -12,7 +12,7 @@ class Client(Base):
 
     uid: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True, default=uuid.uuid4)
     email: Mapped[str] = mapped_column(String, nullable=False)
-    phone_number: Mapped[str] = mapped_column(String, nullable=False)
+    phone_number: Mapped[str] = mapped_column(String, nullable=True)
 
     def serialize(self) -> ClientFromDB:
         return ClientFromDB(
