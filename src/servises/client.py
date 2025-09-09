@@ -29,13 +29,13 @@ class ClientService:
         query = select(Client)
 
         if filters.first_name is not None:
-            query = query.where(Client.first_name.contains(filters.first_name))
+            query = query.where(Client.first_name.ilike(f'%{filters.first_name}%'))
         if filters.last_name is not None:
-            query = query.where(Client.last_name.contains(filters.last_name))
+            query = query.where(Client.last_name.ilike(f'%{filters.last_name}%'))
         if filters.email is not None:
-            query = query.where(Client.email.contains(filters.email))
+            query = query.where(Client.email.ilike(f'%{filters.email}%'))
         if filters.phone_number is not None:
-            query = query.where(Client.phone_number.contains(filters.phone_number))
+            query = query.where(Client.phone_number.ilike(f'%{filters.phone_number}%'))
 
         query = query.limit(filters.limit).offset(filters.offset)
 
