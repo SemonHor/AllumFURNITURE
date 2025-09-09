@@ -28,4 +28,4 @@ async def filter(body: ModificatorFromFilter, db_session: AsyncSession = Depends
 
 @router.delete("/delete")
 async def delete(uid: UUID4, db_session: AsyncSession = Depends(get_session)):
-    return await ModificatorService.delete_f(uid, db_session)
+    return await ModificatorService.delete(uid, db_session)

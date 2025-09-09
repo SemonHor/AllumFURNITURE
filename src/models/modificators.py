@@ -20,7 +20,7 @@ class Modificator(Base):
 
     def serialize(self) -> ModificatorFromDB:
         return ModificatorFromDB(
-            uid=self.uid,
+            uid=str(self.uid),
             name=self.name,
             description=self.description,
             value=self.value,

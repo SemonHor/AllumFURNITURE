@@ -19,8 +19,8 @@ class Meterial(Base):
 
     def serialize(self) -> MaterialFromDB:
         return MaterialFromDB(
-            uid=self.uid,
+            uid=str(self.uid),
             name=self.name,
             description=self.description,
-            uid_part=self.uid_part,
+            uid_part=self.uid_part
         )

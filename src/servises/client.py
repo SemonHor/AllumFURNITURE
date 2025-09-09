@@ -4,32 +4,47 @@ from sqlalchemy import select, delete
 from pydantic import UUID4
 
 
-# Здесь происходит создание client
-async def create(body: ClientCreate, db_session) -> ClientFromDB:
-    query = Client(**body.model_dump(exclude_unset=True))
-    db_session.add(query)
-    await db_session.commit()
-    return query
-
-
-# Здесь происходит обновление тех или иных данных в client
-async def update(body: ClientFromDB, db_session) -> ClientFromDB:
-    query = await db_session.execute(select(Client).where(Client.uid == body.uid))
-    query = query.scalar()
-    if query:
-        for key, value in body.model_dump(exclude_unset=True).items():
-            setattr(query, key, value)
+class ClientService:
+    @staticmethod
+    async def create(body: ClientCreate, db_session) -> ClientFromDB:
+        query = Client(**body.model_dump(exclude_unset=True))
+        db_session.add(query)
         await db_session.commit()
-        return query
+        await db_session.refresh(query)
+        return query.serialize()
 
+    @staticmethod
+    async def update(body: ClientFromDB, db_session) -> ClientFromDB:
+        query = await db_session.execute(select(Client).where(Client.uid == body.uid))
+        query = query.scalar()
+        if query:
+            for key, value in body.model_dump(exclude_unset=True).items():
+                setattr(query, key, value)
+            await db_session.commit()
+            await db_session.refresh(query)
+        return query.serialize()
 
-# Здесь находится нахождение по фильтрам client
-async def filter(filters: ClientFromFilter, db_session):
-    pass
+    @staticmethod
+    async def filter(filters: ClientFromFilter, db_session) -> list[ClientFromDB]:
+        query = select(Client)
 
+        if filters.first_name is not None:
+            query = query.where(Client.first_name.contains(filters.first_name))
+        if filters.last_name is not None:
+            query = query.where(Client.last_name.contains(filters.last_name))
+        if filters.email is not None:
+            query = query.where(Client.email.contains(filters.email))
+        if filters.phone_number is not None:
+            query = query.where(Client.phone_number.contains(filters.phone_number))
 
-# Здесь происходит удаление тех или иных данных в client
-async def delete_f(uid: UUID4, db_session):
-    stmt = delete(Client).where(Client.uid == uid)
-    await db_session.execute(stmt)
-    await db_session.commit()
+        query = query.limit(filters.limit).offset(filters.offset)
+
+        result = await db_session.execute(query)
+        clients = result.scalars().all()
+        return [client.serialize() for client in clients]
+
+    @staticmethod
+    async def delete(uid: UUID4, db_session):
+        stmt = delete(Client).where(Client.uid == uid)
+        await db_session.execute(stmt)
+        await db_session.commit()
