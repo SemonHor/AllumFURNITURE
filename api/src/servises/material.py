@@ -26,6 +26,8 @@ class MatherialService:
 
     @staticmethod
     async def filter(filters: MaterialFromFilter, db_session):
+        query = select(Meterial)
+
         if filters.name is not None:
             query = query.where(Meterial.name.uid == filters.uid)
         if filters.uid is not None:
